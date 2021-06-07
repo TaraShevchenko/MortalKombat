@@ -1,5 +1,6 @@
 const Player1 = {
-    player: 'player1',
+    player: 1,
+    hpChanges: hpChanges,
     name: 'Scorpion',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
@@ -12,7 +13,8 @@ const Player1 = {
 }
 
 const Player2 = {
-    player: 'player2',
+    player: 2,
+    hpChanges: hpChanges,
     name: 'Subzero',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
@@ -41,7 +43,7 @@ const arenas = document.querySelector('.arenas');
 const randomButton = document.querySelector('.button');
 
 const createPlayer = ($player) => {
-    const player = createElement('div', $player.player, arenas);
+    const player = createElement('div', 'player' + $player.player, arenas);
     const progressbar = createElement('div', 'progressbar', player);
     const life = createElement('div', 'life', progressbar);
     life.style.cssText = `width: ${$player.hp}%;`;
@@ -52,38 +54,69 @@ const createPlayer = ($player) => {
     characterImage.setAttribute("src", $player.img)
 }
 
-const winner = ($player) => {
-    for (let i = 0; i < $player.length; i++) {
-        if ($player[i].hp > 0) {
-            return $player[i].name;
-        }
-    }
-}
+function hpChanges() {
 
-const fightResult = () => {
-    const fightResultPanel = createElement('div', 'loseTitle', arenas);
-    fightResultPanel.innerText = winner([Player1, Player2]) + ' Wins';
-
-    randomButton.setAttribute('disabled', 'disabled');
-}
-
-const onRandomClick = ($player) => {
-    for (let i = 0; i < $player.length; i++) {
-        const playerHp = document.querySelector(`.${$player[i].player} .life`);
-
-        $player[i].hp = $player[i].hp - Math.ceil(Math.random() * 20);
-        if ($player[i].hp > 0) {
-            playerHp.style.cssText = `width: ${$player[i].hp}%;`;
+    function changeHP() {
+        this.hp = this.hp - Math.ceil(Math.random() * 20);
+        if (this.hp <= 0) {
+            return this.hp = 0;
         } else {
-            playerHp.style.cssText = 'width: 0%;';
-            fightResult();
+            return this.hp;
         }
     }
+
+    function elHP() {
+        let life = document.querySelector(`.player${this.player} .life`);
+        this.hpChanges = life;
+        return this.hpChanges;
+    }
+
+    function renderHP() {
+        this.hpChanges.style.cssText = `width: ${this.hp}%;`;
+    }
+
+    changeHP.call(this)
+    elHP.call(this)
+    renderHP.call(this)
+}
+
+const showResultsText = (name) => {
+    const resultsText = createElement('div', 'loseTitle', arenas);
+    if (name) {
+        resultsText.innerText = `${name} Wins`;
+    } else {
+        resultsText.innerText = 'Draw';
+    }
+    createReloadButton();
+    return resultsText;
 }
 
 randomButton.addEventListener('click', function () {
-    onRandomClick([Player1, Player2]);
+    hpChanges.call(Player1);
+    hpChanges.call(Player2);
+
+    if (Player1.hp === 0 || Player2.hp === 0) {
+        randomButton.disabled = true;
+    }
+
+    if (Player1.hp === 0 && Player1.hp < Player2.hp) {
+        showResultsText(Player2.name);
+    } else if (Player2.hp === 0 && Player2.hp < Player1.hp) {
+        showResultsText(Player1.name);
+    } else if (Player1.hp === 0 && Player2.hp === 0) {
+        showResultsText();
+    }
 });
+
+const createReloadButton = () => {
+    const reloadWrap = createElement('div', 'reloadWrap', arenas);
+    const reloadButton = createElement('button', 'button', reloadWrap);
+    reloadButton.innerText = 'Restart';
+    return reloadButton.addEventListener('click', function () {
+        window.location.reload();
+    });
+}
+
 
 createPlayer(Player1);
 createPlayer(Player2);
