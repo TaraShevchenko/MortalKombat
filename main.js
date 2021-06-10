@@ -1,6 +1,19 @@
+const arenas = document.querySelector('.arenas');
+const formFight = document.querySelector('.control');
+
+const Hit = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+
+const Attack = ['head', 'body', 'foot'];
+
 const Player1 = {
     player: 1,
-    hpChanges: hpChanges,
+    changeHP,
+    elHP,
+    renderHP,
     name: 'Scorpion',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
@@ -14,7 +27,9 @@ const Player1 = {
 
 const Player2 = {
     player: 2,
-    hpChanges: hpChanges,
+    changeHP,
+    elHP,
+    renderHP,
     name: 'Subzero',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
@@ -24,6 +39,10 @@ const Player2 = {
     attack: function () {
         console.log(this.name + ' Fight');
     }
+}
+
+const getRandom = (maxNumber) => {
+    return Math.ceil(Math.random() * maxNumber);
 }
 
 const createElement = (elem, className, parent) => {
@@ -39,9 +58,6 @@ const createElement = (elem, className, parent) => {
     }
 }
 
-const arenas = document.querySelector('.arenas');
-const randomButton = document.querySelector('.button');
-
 const createPlayer = ($player) => {
     const player = createElement('div', 'player' + $player.player, arenas);
     const progressbar = createElement('div', 'progressbar', player);
@@ -54,30 +70,21 @@ const createPlayer = ($player) => {
     characterImage.setAttribute("src", $player.img)
 }
 
-function hpChanges() {
-
-    function changeHP() {
-        this.hp = this.hp - Math.ceil(Math.random() * 20);
-        if (this.hp <= 0) {
-            return this.hp = 0;
-        } else {
-            return this.hp;
-        }
+function changeHP(number) {
+    this.hp -= number;
+    if (this.hp <= 0) {
+        return this.hp = 0;
+    } else {
+        return this.hp;
     }
+}
 
-    function elHP() {
-        let life = document.querySelector(`.player${this.player} .life`);
-        this.hpChanges = life;
-        return this.hpChanges;
-    }
+function elHP() {
+    return document.querySelector(`.player${this.player} .life`);
+}
 
-    function renderHP() {
-        this.hpChanges.style.cssText = `width: ${this.hp}%;`;
-    }
-
-    changeHP.call(this)
-    elHP.call(this)
-    renderHP.call(this)
+function renderHP() {
+    this.elHP().style.cssText = `width: ${this.hp}%;`;
 }
 
 const showResultsText = (name) => {
@@ -87,16 +94,67 @@ const showResultsText = (name) => {
     } else {
         resultsText.innerText = 'Draw';
     }
-    createReloadButton();
     return resultsText;
 }
 
-randomButton.addEventListener('click', function () {
-    hpChanges.call(Player1);
-    hpChanges.call(Player2);
+const enemyAttack = () => {
+    const hit = Attack[getRandom(3) - 1];
+    const defence = Attack[getRandom(3) - 1];
+
+    return {
+        value: getRandom(Hit[hit]),
+        hit,
+        defence
+    }
+}
+
+const attack = () => {
+    let value;
+    let hit;
+    let defence;
+
+    for (const item of formFight) {
+        if (item.checked === true && item.name === 'hit') {
+            value = getRandom(Hit[item.value]);
+            hit = item.value;
+        }
+        if (item.checked === true && item.name === 'defence') {
+            defence = item.value;
+        }
+
+        item.checked = false;
+    }
+
+    return {
+        value,
+        hit,
+        defence
+    }
+}
+
+formFight.addEventListener('submit', function (e) {
+    e.preventDefault();
+    let attackObj = attack();
+    let enemyAttackObj = enemyAttack();
+
+    if (enemyAttackObj.hit != attackObj.defence) {
+        Player1.changeHP(enemyAttackObj.value);
+        Player1.renderHP();
+    }
+
+    if (attackObj.hit != enemyAttackObj.defence) {
+        Player2.changeHP(attackObj.value);
+        Player2.renderHP();
+    }
 
     if (Player1.hp === 0 || Player2.hp === 0) {
-        randomButton.disabled = true;
+        const inputs = document.querySelectorAll('.control input');
+        const attackButton = document.querySelector('.button');
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = 'disabled';
+        }
+        attackButton.disabled = 'disabled';
+        createReloadButton();
     }
 
     if (Player1.hp === 0 && Player1.hp < Player2.hp) {
