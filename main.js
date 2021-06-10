@@ -138,12 +138,12 @@ formFight.addEventListener('submit', function (e) {
     let enemyAttackObj = enemyAttack();
 
     if (enemyAttackObj.hit != attackObj.defence) {
-        Player1.changeHP(getRandom(enemyAttackObj.value));
+        Player1.changeHP(enemyAttackObj.value);
         Player1.renderHP();
     }
 
     if (attackObj.hit != enemyAttackObj.defence) {
-        Player2.changeHP(getRandom(attackObj.value));
+        Player2.changeHP(attackObj.value);
         Player2.renderHP();
     }
 
