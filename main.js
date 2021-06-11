@@ -211,7 +211,7 @@ formFight.addEventListener('submit', function (e) {
     if (enemyAttackObj.hit !== attackObj.defence) {
         Player1.changeHP(enemyAttackObj.value);
         Player1.renderHP();
-        generateLogs('hit', Player1, Player2, enemyAttackObj.value);
+        generateLogs('hit', Player2, Player1, enemyAttackObj.value);
     } else {
         generateLogs('defence', Player2, Player1, 0);
     }
@@ -219,9 +219,9 @@ formFight.addEventListener('submit', function (e) {
     if (attackObj.hit !== enemyAttackObj.defence) {
         Player2.changeHP(attackObj.value);
         Player2.renderHP();
-        generateLogs('hit', Player2, Player1, attackObj.value);
+        generateLogs('hit', Player1, Player2, attackObj.value);
     } else {
-        generateLogs('defence', Player2, Player1, 0);
+        generateLogs('defence', Player1, Player2, 0);
     }
     showResult();
 });
@@ -256,7 +256,7 @@ const generateLogs = (type, playerKick, playerDefence, playerDamage) => {
 
 
     if (playerDamage || playerDamage === 0) {
-        const damage = `<p class="damageColor">-${playerDamage}</p><p class="totalColor"> [${playerKick.hp}]</p>`;
+        const damage = `<p class="damageColor">${playerDamage}</p><p class="totalColor"> [${playerDefence.hp}]</p>`;
         html = `<div class="log">${text} ${damage}</div>`;
     }else {
         html = `<div class="log">${text}</div>`;
