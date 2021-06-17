@@ -1,19 +1,4 @@
 const store = {
-    initialPlayer: {
-        player: 999,
-        changeHP: '',
-        elHP: '',
-        renderHP: '',
-        name: 'God',
-        hp: 100,
-        img: 'image',
-        weapon: [
-            'Sword', 'Katana'
-        ],
-        attack: function () {
-            console.log(this.name + ' Fight');
-        }
-    },
     logs: {
         start: `Часы показывали [time], когда <p class="nameColor">[playerKick]</p> и <p class="nameColor">[playerDefence]</p> бросили вызов друг другу.`,
         end: [

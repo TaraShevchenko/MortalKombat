@@ -1,17 +1,5 @@
-import {createDate, createElement, getRandom, arenas, chat} from "./utils.js";
+import {createDate, getRandom, chat} from "./utils.js";
 import store from "./store.js";
-
-export const createPlayer = (Player) => {
-    const player = createElement('div', 'player' + Player.player, arenas);
-    const progressbar = createElement('div', 'progressbar', player);
-    const life = createElement('div', 'life', progressbar);
-    life.style.cssText = `width: ${Player.hp}%;`;
-    const name = createElement('div', 'name', progressbar);
-    name.innerText = Player.name;
-    const character = createElement('div', 'character', player);
-    const characterImage = createElement('img', '', character);
-    characterImage.setAttribute("src", Player.img)
-}
 
 export const generateLogs = (type, playerKick, playerDefence, playerDamage) => {
     const {logs} = store;
