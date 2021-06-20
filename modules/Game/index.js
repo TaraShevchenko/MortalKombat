@@ -1,4 +1,4 @@
-import {form, arenas} from "../utils.js";
+import {form, arenas, getRandom} from "../utils.js";
 import Player from "../Player";
 import Attack from "../Attack";
 import Results from "../Results";
@@ -13,27 +13,24 @@ class Game {
     }
 
     start = () => {
-        const Player1 = new Player({
-            player: 1,
-            name: 'Scorpion',
-            img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-            hp: 100
+
+        const player1 = new Player({
+            ...JSON.parse(localStorage.player1),
+            player: 1
         });
 
-        const Player2 = new Player({
-            player: 2,
-            name: 'Subzero',
-            img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-            hp: 100
+        const player2 = new Player({
+            ...JSON.parse(localStorage.player2),
+            player: 2
         });
 
         const initialize = new Initialize({
-            Player1: Player1,
-            Player2: Player2
+            Player1: player1,
+            Player2: player2
         });
         initialize.initialize()
 
-        this.gameFormGenerate(Player1, Player2)
+        this.gameFormGenerate(player1, player2)
     }
 
     gameFormGenerate = (Player1, Player2) => {
@@ -57,5 +54,6 @@ class Game {
         });
     }
 }
+
 
 export default Game;

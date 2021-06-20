@@ -1,11 +1,20 @@
 import {getRandom} from "../utils.js";
 import {generateLogs} from "../createElements.js";
 
+
+const fightServer = async () => {
+    const body = await fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+        method: 'POST',
+        body: JSON.stringify({})
+    }).then(res => res.json());
+    return body;
+}
+
 class Attack {
     constructor(props) {
         this.parentSelector = props.parentSelector;
         this.Player1 = props.Player1;
-        this.Player2 =  props.Player2;
+        this.Player2 = props.Player2;
         this.hits = {
             head: 30,
             body: 25,
@@ -15,13 +24,9 @@ class Attack {
     }
 
     enemyAttack = () => {
-        const hit = this.attacks[getRandom(3) - 1];
-        const defence = this.attacks[getRandom(3) - 1];
-
+        const test = fightServer()
         return {
-            value: getRandom(this.hits[hit]),
-            hit,
-            defence
+            ...test.player2,
         }
     }
 
@@ -38,7 +43,6 @@ class Attack {
             if (item.checked === true && item.name === 'defence') {
                 defence = item.value;
             }
-            item.checked = false;
         }
 
         return {
