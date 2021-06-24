@@ -43,14 +43,6 @@ class Game {
                 Player2: Player2
             });
             attack.attack()
-
-            const results = new Results({
-                parentSelector: arenas,
-                Player1: Player1,
-                Player2: Player2
-            })
-
-            results.result(Player1, Player2);
         });
     }
 }

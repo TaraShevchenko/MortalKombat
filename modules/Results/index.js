@@ -42,7 +42,9 @@ class Results {
     }
 
     result = () => {
+
         if (this.Player1.hp === 0 && this.Player1.hp < this.Player2.hp) {
+
             this.showResultsText(this.Player2.name);
 
             this.disableButtons();
@@ -50,6 +52,7 @@ class Results {
 
             generateLogs('end', this.Player2, this.Player1);
         } else if (this.Player2.hp === 0 && this.Player2.hp < this.Player1.hp) {
+
             this.showResultsText(this.Player1.name);
 
             this.disableButtons();

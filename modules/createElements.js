@@ -26,8 +26,6 @@ export const generateLogs = (type, playerKick, playerDefence, playerDamage) => {
             text = '';
             break;
     }
-
-
     if (playerDamage || playerDamage === 0) {
         const damage = `<p class="damageColor">${playerDamage}</p><p class="totalColor"> [${playerDefence.hp}]</p>`;
         html = `<div class="log">${text} ${damage}</div>`;

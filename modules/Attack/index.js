@@ -1,6 +1,6 @@
-import {getRandom} from "../utils.js";
+import {getRandom, arenas} from "../utils.js";
 import {generateLogs} from "../createElements.js";
-
+import Results from "../Results";
 
 const fightServer = async () => {
     const body = await fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
@@ -20,12 +20,11 @@ class Attack {
             body: 25,
             foot: 20,
         };
-        this.attacks = ['head', 'body', 'foot'];
     }
 
-    enemyAttack = () => {
-        const test = fightServer()
-        return {
+    enemyAttack = async () => {
+        const test = await fightServer();
+         return {
             ...test.player2,
         }
     }
@@ -43,6 +42,7 @@ class Attack {
             if (item.checked === true && item.name === 'defence') {
                 defence = item.value;
             }
+            item.checked = false;
         }
 
         return {
@@ -52,9 +52,9 @@ class Attack {
         }
     }
 
-    attack = () => {
+    attack = async () => {
         let attackObj = this.playerAttack();
-        let enemyAttackObj = this.enemyAttack();
+        let enemyAttackObj = await this.enemyAttack();
 
         if (enemyAttackObj.hit !== attackObj.defence) {
             this.Player1.changeHP(enemyAttackObj.value);
@@ -71,6 +71,13 @@ class Attack {
         } else {
             generateLogs('defence', this.Player1, this.Player2, 0);
         }
+
+        const results = new Results({
+            parentSelector: arenas,
+            Player1: this.Player1,
+            Player2: this.Player2
+        })
+        results.result();
     }
 }
 
